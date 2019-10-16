@@ -1,9 +1,6 @@
 <template>
   <div class="page-container">
-    <div
-      style="width: 100%; max-width: 350px; margin: 0 auto;background-color:white;"
-      ref="imageWrapper"
-    >
+    <div style="width: 100%; max-width: 350px; margin: 0 auto;" ref="imageWrapper">
       <mu-card>
         <mu-card-header :title="nickname" :sub-title="sex">
           <!-- <mu-avatar slot="avatar">
@@ -23,14 +20,20 @@
                 <div
                   style="margin-right:10px;margin-bottom:10px;width:40%;font-size:12px"
                 >{{dd.name}}</div>
-                <mu-linear-progress
+                <div class="skill-container">
+                  <div
+                    class="skills"
+                    :style="'background-color:rgba(0,0,0,0.5);width:'+ dd.level*10+'%;'"
+                  ></div>
+                </div>
+                <!-- <mu-linear-progress
                   mode="determinate"
                   :value="dd.level"
                   :size="15"
                   :min="0"
                   :max="10"
                   color="gray"
-                ></mu-linear-progress>
+                ></mu-linear-progress>-->
               </div>
             </div>
           </div>
@@ -122,7 +125,6 @@
 
 <script>
 import html2canvas from "html2canvas";
-import { async } from "q";
 
 export default {
   name: "IndexPage",
@@ -216,31 +218,32 @@ export default {
     gen() {
       this.openGen = true;
     },
-    go: async function() {
+    go() {
       this.dataURL = "";
       this.openGen = false;
       this.toImage();
     },
-    toImage: function() {
+    toImage() {
       window.scrollTo(0, 0);
       let that = this;
       let ele = that.$refs.imageWrapper;
       let width = ele.offsetWidth;
       let height = ele.offsetHeight;
       let scale = 2; //放大倍数
-      setTimeout(function() {
-        //添加延迟，防止图片没有加载完成，就生成canvas，导致页面图片空白
-        html2canvas(ele, {
-          dpi: window.devicePixelRatio * 2,
-          scale: scale,
-          backgroundColor: null,
-          width: width,
-          height: height
-        }).then(canvas => {
-          let dataURL = canvas.toDataURL("image/jpeg");
-          that.dataURL = dataURL;
-        });
-      }, 1000);
+      html2canvas(ele, {
+        dpi: window.devicePixelRatio * 2,
+        scale: scale,
+        backgroundColor: null,
+        width: width,
+        height: height,
+        allowTait: true
+      }).then(canvas => {
+        let dataURL = canvas.toDataURL("image/png");
+        that.dataURL = dataURL;
+      });
+      // setTimeout(function() {
+      //   //添加延迟，防止图片没有加载完成，就生成canvas，导致页面图片空白
+      // }, 1000);
       this.openImage = true;
     }
   },
@@ -253,6 +256,14 @@ export default {
 .page-container {
   padding: 30px 30px 100px 30px;
   margin-top: 30px;
+}
+.skill-container {
+  width: 100%;
+  height: 18px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.skills {
+  height: 18px;
 }
 /* .index-logo {
   height: 300px;
