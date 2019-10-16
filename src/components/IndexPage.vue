@@ -2,13 +2,14 @@
   <div class="page-container">
     <div style="width: 100%; max-width: 350px; margin: 0 auto;" ref="imageWrapper">
       <mu-card>
-        <mu-card-header :title="nickname" :sub-title="sex">
-          <!-- <mu-avatar slot="avatar">
-              <img src="../../assets/images/uicon.jpg" />
+        <mu-card-header :title="nickname" :sub-title="description">
+          <!-- <mu-avatar slot="avatar" v-if="avatar_url != ''">
+            <img :src="avatar_url" />
           </mu-avatar>-->
         </mu-card-header>
         <mu-card-media>
-          <img src="../assets/logo.png" />
+          <img :src="image_url" v-if="image_url != ''" style="display:block;" />
+          <img src="../assets/logo.png" v-if="image_url == ''" />
         </mu-card-media>
         <mu-card-title :title="company" :sub-title="email"></mu-card-title>
         <mu-card-text>
@@ -21,10 +22,7 @@
                   style="margin-right:10px;margin-bottom:10px;width:40%;font-size:12px"
                 >{{dd.name}}</div>
                 <div class="skill-container">
-                  <div
-                    class="skills"
-                    :style="'background-color:rgba(0,0,0,0.5);width:'+ dd.level*10+'%;'"
-                  ></div>
+                  <div :class="'skills level-color-'+dd.color" :style="'width:'+ dd.level*10+'%;'"></div>
                 </div>
                 <!-- <mu-linear-progress
                   mode="determinate"
@@ -95,11 +93,20 @@
           <mu-col span="12" sm="12">
             <mu-text-field v-model="nickname" label="昵称" label-float full-width></mu-text-field>
           </mu-col>
+          <!-- <mu-col span="12" sm="12">
+            <mu-text-field v-model="avatar_url" label="头像地址" label-float full-width></mu-text-field>
+          </mu-col>-->
+          <mu-col span="12" sm="12">
+            <mu-text-field v-model="image_url" label="海报地址" label-float full-width></mu-text-field>
+          </mu-col>
           <mu-col span="12" sm="12">
             <mu-text-field v-model="company" label="公司/组织" label-float full-width></mu-text-field>
           </mu-col>
           <mu-col span="12" sm="12">
             <mu-text-field v-model="email" label="邮箱" label-float full-width></mu-text-field>
+          </mu-col>
+          <mu-col span="12" sm="12">
+            <mu-text-field v-model="description" label="个性签名" label-float full-width></mu-text-field>
           </mu-col>
           <mu-col span="12" sm="12">
             <mu-select label="性别" v-model="sex" full-width>
@@ -140,10 +147,13 @@ export default {
       stack_class_name: "",
       stack_level: 0,
       stack_color: "",
-      nickname: "菜虚坤",
-      company: "阿里巴巴",
+      nickname: "张三",
+      avatar_url: "",
+      image_url: "",
+      company: "火星公司",
       email: "test@qq.com",
       sex: "男",
+      description: "这家伙没留下任何话",
       options: ["男", "女"],
       dataURL: "",
       newArr: []
@@ -180,6 +190,21 @@ export default {
         this.openDialog = false;
         this.$toast.error("已经选过这个技术栈了");
       } else {
+        if (this.stack_level <= 2) {
+          this.stack_color = 1;
+        }
+        if (this.stack_level > 2 && this.stack_level <= 4) {
+          this.stack_color = 2;
+        }
+        if (this.stack_level > 4 && this.stack_level <= 6) {
+          this.stack_color = 3;
+        }
+        if (this.stack_level > 6 && this.stack_level <= 8) {
+          this.stack_color = 4;
+        }
+        if (this.stack_level > 8 && this.stack_level <= 10) {
+          this.stack_color = 5;
+        }
         let my_stack = {
           name: this.stack_name,
           class: this.stack_class_name,
@@ -264,6 +289,25 @@ export default {
 }
 .skills {
   height: 18px;
+}
+.level-color-1 {
+  background-color: rgba(165, 42, 42, 0.7);
+}
+
+.level-color-2 {
+  background-color: rgba(210, 105, 30, 0.7);
+}
+
+.level-color-3 {
+  background-color: orange;
+}
+
+.level-color-4 {
+  background-color: rgba(0, 128, 0, 0.7);
+}
+
+.level-color-5 {
+  background-color: rgba(75, 0, 130, 0.7);
 }
 /* .index-logo {
   height: 300px;
