@@ -82,16 +82,11 @@
         </mu-col>
       </mu-row>
     </mu-container>
-    <mu-dialog
-      :title="'您对于 '+stack_name+' 的熟练程度：'"
-      width="400"
-      :open.sync="openDialog"
-      :overlay-color="'#fff'"
-    >
+    <mu-dialog :title="'您对于 '+stack_name+' 的熟练程度：'" width="400" :open.sync="openDialog">
       <mu-slider :step="1" :min="0" :max="10" v-model="stack_level"></mu-slider>
       <mu-button slot="actions" flat color="primary" @click="confirm()">我确定选择 {{stack_level}}</mu-button>
     </mu-dialog>
-    <mu-dialog title="可选：" width="400" :open.sync="openGen" :overlay-color="'#fff'">
+    <mu-dialog title="可选：" width="400" :open.sync="openGen">
       <mu-container>
         <mu-row>
           <mu-col span="12" sm="12">
@@ -119,7 +114,7 @@
         </mu-row>
       </mu-container>
     </mu-dialog>
-    <mu-dialog title="您的技能卡" :open.sync="openImage" :overlay-color="'#fff'">
+    <mu-dialog title="您的技能卡" :open.sync="openImage">
       <img :src="dataURL" style="width: 100%; max-width: 350px; margin: 0 auto;" />
     </mu-dialog>
   </div>

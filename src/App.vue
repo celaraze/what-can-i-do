@@ -18,7 +18,7 @@
         <mu-button icon slot="left" @click="showAbout()">
           <mu-icon value="info" color="white"></mu-icon>
         </mu-button>
-        <mu-button icon slot="right" href="https://github.com/FamioGit/UniVision-Blog">
+        <mu-button icon slot="right" href="https://gitee.com/famio/WCID">
           <svg
             version="1.1"
             id="Layer_1"
