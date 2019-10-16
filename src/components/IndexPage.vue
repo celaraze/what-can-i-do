@@ -1,6 +1,9 @@
 <template>
   <div class="page-container">
-    <div style="width: 100%; max-width: 350px; margin: 0 auto;" ref="imageWrapper">
+    <mu-flex justify-content="center" style="color:white">这是个人技能卡的生成工具</mu-flex>
+    <mu-flex justify-content="center" style="color:white">在您提交生成的同时我们不会上传任何信息</mu-flex>
+    <mu-flex justify-content="center" style="color:white">请通过点击技术栈卡片填满您的技能卡吧</mu-flex>
+    <div style="width: 100%; max-width: 350px; margin: 50px auto 0 auto;" ref="imageWrapper">
       <mu-card>
         <mu-card-header :title="nickname" :sub-title="description">
           <!-- <mu-avatar slot="avatar" v-if="avatar_url != ''">
@@ -8,39 +11,48 @@
           </mu-avatar>-->
         </mu-card-header>
         <mu-card-media>
-          <img :src="image_url" v-if="image_url != ''" style="display:block;" />
+          <img :src="image_url" v-if="image_url != ''" />
           <img src="../assets/logo.png" v-if="image_url == ''" />
         </mu-card-media>
         <mu-card-title :title="company" :sub-title="email"></mu-card-title>
+        <mu-card-text v-if="newArr.length<=0">这家伙什么都不会...</mu-card-text>
         <mu-card-text>
           <div v-for="d,index in newArr" :key="index">
             <!-- <caption>123</caption> -->
             <mu-divider></mu-divider>
             <div style="margin-top:20px;">
-              <div style="display:flex;" v-for="dd,index2 in d" :key="index2">
+              <div
+                style="display:flex;"
+                v-for="dd,index2 in d"
+                :key="index2"
+                @click="removeStack(index2)"
+              >
                 <div
                   style="margin-right:10px;margin-bottom:10px;width:40%;font-size:12px"
                 >{{dd.name}}</div>
                 <div class="skill-container">
                   <div :class="'skills level-color-'+dd.color" :style="'width:'+ dd.level*10+'%;'"></div>
                 </div>
-                <!-- <mu-linear-progress
-                  mode="determinate"
-                  :value="dd.level"
-                  :size="15"
-                  :min="0"
-                  :max="10"
-                  color="gray"
-                ></mu-linear-progress>-->
               </div>
             </div>
           </div>
         </mu-card-text>
       </mu-card>
     </div>
+    <mu-container>
+      <mu-row>
+        <mu-col span="12" sm="12">
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center">
+              <mu-button style="margin-top:20px;" color="white" text-color="black" @click="gen()">生成</mu-button>
+            </mu-flex>
+          </mu-flex>
+        </mu-col>
+      </mu-row>
+    </mu-container>
     <mu-container class="body-head">
-      <mu-row gutter>
-        <mu-col class="center" span="12" sm="12" md="8" lg="8" xl="8">
+      <!-- <mu-row gutter>
+        <mu-col span="12" sm="12" md="8" lg="8" xl="8">
           <div class="grid-cell">
             <h3 style="color:white">我的技术栈</h3>
             <mu-chip
@@ -55,16 +67,10 @@
             </mu-chip>
           </div>
         </mu-col>
-      </mu-row>
-      <mu-row v-if="mine.length>0" gutter>
-        <mu-button
-          style="margin-top:20px;"
-          slot="actions"
-          color="white"
-          text-color="black"
-          @click="gen()"
-        >生成</mu-button>
-      </mu-row>
+      </mu-row>-->
+      <!-- <mu-row v-if="mine.length>0" gutter>
+        
+      </mu-row>-->
       <mu-divider style="margin-top:20px;"></mu-divider>
       <mu-row gutter>
         <mu-col span="12" sm="12" md="8" lg="8" xl="8">
@@ -83,11 +89,17 @@
         </mu-col>
       </mu-row>
     </mu-container>
-    <mu-dialog :title="'您对于 '+stack_name+' 的熟练程度：'" width="400" :open.sync="openDialog">
+    <mu-dialog
+      :title="'您对于 '+stack_name+' 的熟练程度：'"
+      width="400"
+      :open.sync="openDialog"
+      :overlay-close="false"
+    >
       <mu-slider :step="1" :min="0" :max="10" v-model="stack_level"></mu-slider>
+      <mu-button slot="actions" flat color="error" @click="openDialog = false">取消</mu-button>
       <mu-button slot="actions" flat color="primary" @click="confirm()">我确定选择 {{stack_level}}</mu-button>
     </mu-dialog>
-    <mu-dialog title="可选：" width="400" :open.sync="openGen">
+    <mu-dialog title="可选：" width="400" :open.sync="openGen" :overlay-close="false">
       <mu-container>
         <mu-row>
           <mu-col span="12" sm="12">
@@ -119,13 +131,15 @@
             </mu-select>
           </mu-col>
           <mu-col span="12" sm="12" style="text-align:center">
+            <mu-button slot="actions" flat color="error" @click="openGen = false">取消</mu-button>
             <mu-button flat color="primary" @click="go()">好的，Go！</mu-button>
           </mu-col>
         </mu-row>
       </mu-container>
     </mu-dialog>
-    <mu-dialog title="您的技能卡" :open.sync="openImage">
+    <mu-dialog title="您的技能卡" :open.sync="openImage" :overlay-close="false">
       <img :src="dataURL" style="width: 100%; max-width: 350px; margin: 0 auto;" />
+      <mu-button slot="actions" flat color="error" @click="openImage = false">关闭</mu-button>
     </mu-dialog>
   </div>
 </template>
